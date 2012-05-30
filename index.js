@@ -33,7 +33,7 @@ GenericObject.prototype.create = function(dataObject, callback) {
 					return callback(err);
 				}
 
-				callback(null, result._id);
+				callback(null, { insertId: result._id });
 			});
 		});
 	});
@@ -167,7 +167,7 @@ GenericObject.prototype.update = function(options, newDataObject, callback) {
 							processed++;
 
 							if( processed ==  total_processing) {
-								return callback( null, { success: processed } );
+								return callback( null, { affectedRows: processed } );
 							}
 						});
 					});
@@ -204,7 +204,7 @@ GenericObject.prototype.remove = function(options, callback) {
 			}
 
 			collection.remove( _mongo_selector, { safe: true }, function(err, affectDocuments) {
-				callback(null, { success: affectDocuments });
+				callback(null, { affectedRows: affectDocuments });
 			});
 		});
 	});
