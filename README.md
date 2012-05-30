@@ -10,7 +10,7 @@ A wrapper for Access to connect with ease and flexiblity.
 		
 		npm install Accessor_MongoDB
 
-2. Create a config directory under your application directory, create a file called **database.js** which may contains like this:
+2. Create a config directory under your application directory, create a file called **databaseConfig.js** which may contains like this:
 
 		var databaseConfig = { 
 			// server
