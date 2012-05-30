@@ -1,0 +1,19 @@
+{
+  "author": "Buwei Chiu <bu@hax4.in>",
+  "name": "Accessor_MongoDB",
+  "description": "A MongoDB wrapper for Accessor database layer",
+  "version": "0.1.0",
+  "homepage": "https://github.com/bu/Accessor_MongoDB",
+  "repository": {
+    "url": "git://github.com/bu/Accessor_MongoDB.git"
+  },
+  "dependencies": {
+  	"mongodb": ">=1.0.2",
+	"Accessor": ">=0.2.0"
+  },
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  }
+}
