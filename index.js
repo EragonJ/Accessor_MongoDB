@@ -33,7 +33,7 @@ GenericObject.prototype.create = function(dataObject, callback) {
 					return callback(err);
 				}
 
-				callback(null, { insertId: result._id });
+				callback(null, { insertId: result[0]._id });
 			});
 		});
 	});
@@ -64,6 +64,10 @@ GenericObject.prototype.select = function() {
 
 	// build selector
 	if( options.where && (typeof options.where === "object") ) {
+		if(options.where._id && typeof options.where._id === "string") {
+			options.where._id = ObjectID(options.where._id);
+		}
+
 		_mongo_selector = options.where;
 	}
 
@@ -77,12 +81,12 @@ GenericObject.prototype.select = function() {
 	}
 
 	// limit
-	if( options.limit && parserInt(options.limit) > 0 ) {
+	if( options.limit && parseInt(options.limit) > 0 ) {
 		_mongo_options.limit = options.limit;
 	}
 
 	// offset
-	if( options.offset && parserInt(options.offset) > 0 ) {
+	if( options.offset && parseInt(options.offset) > 0 ) {
 		_mongo_options.skip = options.skip;
 	}
 
@@ -96,7 +100,7 @@ GenericObject.prototype.select = function() {
 			if(err) {
 				return callback(err);
 			}
-			
+
 			collection.find( _mongo_selector, _mongo_options, function(err, result) {
 				if(err) {
 					return callback(err);
@@ -122,11 +126,11 @@ GenericObject.prototype.update = function(options, newDataObject, callback) {
 
 	// where
 	var _mongo_selector = {},
-		_mongo_options = { safe: true };
+		_mongo_options = { safe: true, multi: true };
 
 	// build selector
-	if( options.where && (typeof options.where === "object") && options.where.length > 0 ) {
-		_mongo_selector["$query"] = options.where;
+	if( options.where && (typeof options.where === "object")) {
+		_mongo_selector = options.where;
 	}
 
 	// start connect to database
@@ -140,38 +144,12 @@ GenericObject.prototype.update = function(options, newDataObject, callback) {
 				return callback(err);
 			}
 
-			collection.find( _mongo_selector, function(err, result) {
+			collection.update( _mongo_selector , { $set: newDataObject  } ,  _mongo_options, function(err, result) {
 				if(err) {
 					return callback(err);
 				}
 
-				result.toArray(function(err, data) {
-					if(err) {
-						return callback(err);
-					}
-
-					var processed = 0, total_processing = data.length;
-
-					data.map(function(data) {
-						var __mongo_newDataObject = data;
-
-						for(var key in newDataObject) {
-							__mongo_newDataObject[key] = newDataObject[key];
-						}
-
-						collection.update( { _id: __mongo_newDataObject._id } , __mongo_newDataObject,  _mongo_options, function(err, result) {
-							if(err) {
-								return callback(err);
-							}
-
-							processed++;
-
-							if( processed ==  total_processing) {
-								return callback( null, { affectedRows: processed } );
-							}
-						});
-					});
-				});
+				return callback( null, { success: true } );
 			});
 		});
 	});
@@ -204,6 +182,10 @@ GenericObject.prototype.remove = function(options, callback) {
 			}
 
 			collection.remove( _mongo_selector, { safe: true }, function(err, affectDocuments) {
+				if(err) {
+					return callback(err);
+				}
+
 				callback(null, { affectedRows: affectDocuments });
 			});
 		});
