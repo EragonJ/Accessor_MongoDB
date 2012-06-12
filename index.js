@@ -166,10 +166,10 @@ GenericObject.prototype.remove = function(options, callback) {
 		_mongo_options = { safe: true };
 
 	// build selector
-	if( options.where && (typeof options.where === "object") && options.where.length > 0 ) {
-		_mongo_selector["$query"] = options.where;
+	if( options.where && (typeof options.where === "object")) {
+		_mongo_selector = options.where;
 	}
-
+	
 	// start connect to database
 	database.getInstance(function(err, db) {
 		if(err) {
