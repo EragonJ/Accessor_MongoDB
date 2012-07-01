@@ -1,4 +1,4 @@
-# Accesor_MongoDB 0.1.3
+# Accesor_MongoDB 0.2.0
 
 A wrapper for Access to connect with ease and flexiblity.
 
@@ -134,6 +134,31 @@ Update records filter by option.where with updated_dataObject
 			
 			return info.affectedRows;
 		});
+		
+Despite it simple syntax, in fact, you could do more with it:
+If given dataObject is wrapper in MongoDB operator, it will automaticlly use that mode to update.
+
+		var tester = Accessor("test_collection");
+		
+		var dataObject = {
+			$unset: {
+				email: 1
+			}
+		};
+		
+		var options = { 
+			where: {
+				username: "bu"
+			}
+		};
+		
+		tester.update( options, dataObject, function(err, info) {
+			if(err) {
+				throw err;
+			}
+			
+			return info.affectedRows;
+		};
 
 * If options is omitted, it will update all records. (due to no filter)
 
