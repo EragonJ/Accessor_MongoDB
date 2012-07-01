@@ -126,11 +126,19 @@ GenericObject.prototype.update = function(options, newDataObject, callback) {
 
 	// where
 	var _mongo_selector = {},
-		_mongo_options = { safe: true, multi: true };
+		_mongo_options = { safe: true, multi: true },
+		_mongo_query_object = {};
 
 	// build selector
 	if( options.where && (typeof options.where === "object")) {
 		_mongo_selector = options.where;
+	}
+
+	// build data
+	if( "$set" in newDataObject || "$push" in newDataObject || "$unset" in newDataObject || "$pull" in newDataObject ) {
+		_mongo_query_object = newDataObject;
+	} else {
+		_mongo_query_object["$set"] = newDataObject;
 	}
 
 	// start connect to database
@@ -144,7 +152,7 @@ GenericObject.prototype.update = function(options, newDataObject, callback) {
 				return callback(err);
 			}
 
-			collection.update( _mongo_selector , { $set: newDataObject  } ,  _mongo_options, function(err, result) {
+			collection.update( _mongo_selector , _mongo_query_object,  _mongo_options, function(err, result) {
 				if(err) {
 					return callback(err);
 				}
