@@ -65,7 +65,12 @@ GenericObject.prototype.select = function() {
 	// build selector
 	if( options.where && (typeof options.where === "object") ) {
 		if(options.where._id && typeof options.where._id === "string") {
-			options.where._id = ObjectID(options.where._id);
+            try {
+                options.where._id = ObjectID(options.where._id);
+            }
+            catch (err) {
+                return callback(err);
+            }
 		}
 
 		_mongo_selector = options.where;
