@@ -86,12 +86,12 @@ GenericObject.prototype.select = function() {
 	}
 
 	// limit
-	if( options.limit && parseInt(options.limit) > 0 ) {
+	if( options.limit && parseInt(options.limit, 10) > 0 ) {
 		_mongo_options.limit = options.limit;
 	}
 
 	// offset
-	if( options.offset && parseInt(options.offset) > 0 ) {
+	if( options.offset && parseInt(options.offset, 10) > 0 ) {
 		_mongo_options.skip = options.skip;
 	}
 
